@@ -84,5 +84,43 @@ the test settlement for a bank transfer from the Acute console ("Fund test payme
 
 `ACUTE_API_BASE` + `ACUTE_API_KEY` decide sandbox vs live, so going to production is
 a URL and key swap with no code change. Turso is already a hosted database, so the
-same connection string works from anywhere. Set the five environment variables,
-register a production webhook, and you are live.
+same connection string works from anywhere.
+
+### Vercel
+
+`.github/workflows/deploy.yml` builds and ships to Vercel on every push to `main`.
+`.github/workflows/ci.yml` lints, type-checks and builds every pull request — it
+needs no secrets, because every route renders on demand and nothing touches the
+database or the Acute API at build time. That is deliberate: pull requests from
+forks get the full check without ever seeing a credential.
+
+One-time setup:
+
+```bash
+npm i -g vercel
+vercel link          # creates .vercel/project.json with the org + project ids
+```
+
+Add these **repository secrets** in GitHub (Settings → Secrets and variables → Actions):
+
+| Secret | Where to find it |
+|---|---|
+| `VERCEL_TOKEN` | Vercel → Account Settings → Tokens |
+| `VERCEL_ORG_ID` | `.vercel/project.json` after `vercel link` |
+| `VERCEL_PROJECT_ID` | `.vercel/project.json` after `vercel link` |
+
+Then add the five app variables in the **Vercel project** (Settings → Environment
+Variables), not in GitHub — `vercel pull` feeds them to the build:
+
+```
+ACUTE_API_BASE  ACUTE_API_KEY  ACUTE_WEBHOOK_SECRET
+TURSO_DATABASE_URL  TURSO_DATABASE_SECRET
+```
+
+Finally, register `https://<your-domain>/api/webhooks/acute` as the webhook URL in
+the Acute console and put its signing secret in `ACUTE_WEBHOOK_SECRET`. Without
+that, payments still work but nothing will ever be marked paid.
+
+`vercel.json` pins the deployment to `iad1`. The database lives in AWS
+`us-east-1`, and this app talks to it on nearly every request, so co-locating the
+two matters more than being close to any one set of users.
