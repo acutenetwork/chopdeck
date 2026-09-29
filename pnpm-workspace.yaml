@@ -1,0 +1,7 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@acutenetwork/core@0.0.1'
+  - '@acutenetwork/react@0.0.1'

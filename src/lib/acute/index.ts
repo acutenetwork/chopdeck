@@ -53,7 +53,9 @@ export function createBankTransferPayment(input: {
   /** Chopdeck's cut, split off inside Acute's settlement. Omit for top-ups. */
   commission?: PaymentCommission;
   description?: string;
-  customer?: { name?: string; email?: string };
+  /** Acute requires the payer's email: a payment with no address means the
+   *  buyer transfers into a bare account number and never gets a receipt. */
+  customer: { email: string; name?: string };
   expiresIn?: number;
 }): Promise<Payment> {
   return acute<Payment>("/v1/payments", {

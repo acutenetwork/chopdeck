@@ -62,6 +62,8 @@ export default async function FoodPage({ params }: { params: Promise<{ id: strin
                 priceKobo={food.priceKobo}
                 balanceKobo={wallet.balance}
                 needsVerification={wallet.needsVerification}
+                buyerEmail={user.email}
+                buyerName={user.fullName}
                 disabled={!food.available}
               />
             )}
