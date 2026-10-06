@@ -16,16 +16,16 @@ example of building a real marketplace on the API, not a toy.
 
 ## What each Acute feature does here
 
-| Feature | Endpoint | Where it shows up |
-|---|---|---|
-| Wallet per user | `POST /v1/wallets` | Created during signup — no user exists without somewhere to hold money |
-| Wallet verification | `POST /v1/wallets/:id/kyc` | "Verify wallet" — unlocks the balance and cash-out |
-| Balance | `GET /v1/wallets/:id/balance` | The wallet screen and the checkout modal |
-| Top up | `POST /v1/payments` (`bank_transfer`, target = own wallet) | "Add money" → a one-time account to transfer into |
-| Pay from wallet | `POST /v1/payments` (`virtual_wallet`) + `POST /v1/wallets/:id/pay` | "Pay from wallet" — instant, debits buyer, credits seller |
-| Pay by transfer | `POST /v1/payments` (`bank_transfer`, target = seller wallet) | "Pay with bank transfer" → account number → live order page |
-| Cash out | `POST /v1/wallets/:id/withdraw` | "Cash out" on the wallet screen |
-| Webhooks | signed receiver at `/api/webhooks/acute` | `payment.settled/expired/refunded`, `withdrawal.completed/failed` drive every status |
+| Feature             | Endpoint                                                            | Where it shows up                                                                    |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| Wallet per user     | `POST /v1/wallets`                                                  | Created during signup — no user exists without somewhere to hold money               |
+| Wallet verification | `POST /v1/wallets/:id/kyc`                                          | "Verify wallet" — unlocks the balance and cash-out                                   |
+| Balance             | `GET /v1/wallets/:id/balance`                                       | The wallet screen and the checkout modal                                             |
+| Top up              | `POST /v1/payments` (`bank_transfer`, target = own wallet)          | "Add money" → a one-time account to transfer into                                    |
+| Pay from wallet     | `POST /v1/payments` (`virtual_wallet`) + `POST /v1/wallets/:id/pay` | "Pay from wallet" — instant, debits buyer, credits seller                            |
+| Pay by transfer     | `POST /v1/payments` (`bank_transfer`, target = seller wallet)       | "Pay with bank transfer" → account number → live order page                          |
+| Cash out            | `POST /v1/wallets/:id/withdraw`                                     | "Cash out" on the wallet screen                                                      |
+| Webhooks            | signed receiver at `/api/webhooks/acute`                            | `payment.settled/expired/refunded`, `withdrawal.completed/failed` drive every status |
 
 Money is always integer **kobo**. Every money-moving call carries an
 **Idempotency-Key**. Every webhook is **signature-verified** and **deduped on the
@@ -103,10 +103,10 @@ vercel link          # creates .vercel/project.json with the org + project ids
 
 Add these **repository secrets** in GitHub (Settings → Secrets and variables → Actions):
 
-| Secret | Where to find it |
-|---|---|
-| `VERCEL_TOKEN` | Vercel → Account Settings → Tokens |
-| `VERCEL_ORG_ID` | `.vercel/project.json` after `vercel link` |
+| Secret              | Where to find it                           |
+| ------------------- | ------------------------------------------ |
+| `VERCEL_TOKEN`      | Vercel → Account Settings → Tokens         |
+| `VERCEL_ORG_ID`     | `.vercel/project.json` after `vercel link` |
 | `VERCEL_PROJECT_ID` | `.vercel/project.json` after `vercel link` |
 
 Then add the five app variables in the **Vercel project** (Settings → Environment
