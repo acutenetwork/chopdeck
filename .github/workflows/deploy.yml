@@ -4,21 +4,36 @@ on:
   push:
     branches: [main]
 
-concurrency:
-  group: deploy-${{ github.ref_name }}
-  cancel-in-progress: false
-
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
   deploy:
-    name: Deploy to Vercel (production)
+    name: Deploy to Vercel (${{ matrix.project }})
     runs-on: ubuntu-latest
     environment: production
+    strategy:
+      # One project failing to deploy must not cancel the other.
+      fail-fast: false
+      matrix:
+        # The same code, deployed to two Vercel projects. Each project keeps its
+        # own environment variables in Vercel, which `vercel pull` brings down
+        # below, so the two differ only in config, never in code.
+        project: [CHOPDECK, RHEMASCRY]
+    concurrency:
+      group: deploy-${{ github.ref_name }}-${{ matrix.project }}
+      cancel-in-progress: false
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets[format('VERCEL_PROJECT_ID_{0}', matrix.project)] }}
     steps:
       - uses: actions/checkout@v4
+
+      # A missing project id would let the CLI fall back to whatever it can
+      # infer, so stop before it gets the chance.
+      - name: Check project id
+        run: |
+          if [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Secret VERCEL_PROJECT_ID_${{ matrix.project }} is not set." >&2
+            exit 1
+          fi
 
       - uses: actions/setup-node@v4
         with:
@@ -31,7 +46,7 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      # Pulls the project's production environment variables, so the build runs
+      # Pulls this project's production environment variables, so the build runs
       # against the same config the deployment will.
       - name: Pull Vercel environment
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
