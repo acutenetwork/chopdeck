@@ -48,7 +48,20 @@ function createDb() {
   return drizzle(createClient({ url, authToken, fetch: retryingFetch }), { schema });
 }
 
-export const db = globalForDb.chopdeckDb ?? createDb();
-if (process.env.NODE_ENV !== "production") globalForDb.chopdeckDb = db;
+type Db = ReturnType<typeof createDb>;
+
+/**
+ * Created on first use, not on import. `next build` imports every route to
+ * collect page data, so an eager client made the build itself need database
+ * secrets (CI has none by design). A missing URL still fails loudly: on the
+ * first query, at request time.
+ */
+export const db = new Proxy({} as Db, {
+  get(_target, prop) {
+    const real = (globalForDb.chopdeckDb ??= createDb());
+    const value = Reflect.get(real, prop, real);
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});
 
 export { schema };

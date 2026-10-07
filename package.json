@@ -12,7 +12,7 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@acutenetwork/react": "^0.0.1",
+    "@acutenetwork/react": "file:vendor/acutenetwork-react-0.0.1.tgz",
     "@libsql/client": "^0.17.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

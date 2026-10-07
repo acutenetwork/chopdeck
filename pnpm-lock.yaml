@@ -4,13 +4,16 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@acutenetwork/core': file:vendor/acutenetwork-core-0.0.1.tgz
+
 importers:
 
   .:
     dependencies:
       '@acutenetwork/react':
-        specifier: ^0.0.1
-        version: 0.0.1(react@19.2.4)
+        specifier: file:vendor/acutenetwork-react-0.0.1.tgz
+        version: file:vendor/acutenetwork-react-0.0.1.tgz(react@19.2.4)
       '@libsql/client':
         specifier: ^0.17.4
         version: 0.17.4
@@ -87,11 +90,13 @@ importers:
 
 packages:
 
-  '@acutenetwork/core@0.0.1':
-    resolution: {integrity: sha512-ePjMPrebm/Ydr/WDk4LQRRMXmNmsSsE1ulV515WLEnJf5E0xKvXW+9nW2q17ATFwpDurMzbw3Sc+rHAvRM3HRA==}
+  '@acutenetwork/core@file:vendor/acutenetwork-core-0.0.1.tgz':
+    resolution: {integrity: sha512-ePjMPrebm/Ydr/WDk4LQRRMXmNmsSsE1ulV515WLEnJf5E0xKvXW+9nW2q17ATFwpDurMzbw3Sc+rHAvRM3HRA==, tarball: file:vendor/acutenetwork-core-0.0.1.tgz}
+    version: 0.0.1
 
-  '@acutenetwork/react@0.0.1':
-    resolution: {integrity: sha512-tQQkS4B2u7AzxBjjlrZSVy0ydFiitvzBWHiYsKKS+E21O3AaP6cUHBDTUhzW3wxuQT0ksicgzyexNmRGTSW1nw==}
+  '@acutenetwork/react@file:vendor/acutenetwork-react-0.0.1.tgz':
+    resolution: {integrity: sha512-tQQkS4B2u7AzxBjjlrZSVy0ydFiitvzBWHiYsKKS+E21O3AaP6cUHBDTUhzW3wxuQT0ksicgzyexNmRGTSW1nw==, tarball: file:vendor/acutenetwork-react-0.0.1.tgz}
+    version: 0.0.1
     peerDependencies:
       react: '>=18'
 
@@ -4353,11 +4358,11 @@ packages:
 
 snapshots:
 
-  '@acutenetwork/core@0.0.1': {}
+  '@acutenetwork/core@file:vendor/acutenetwork-core-0.0.1.tgz': {}
 
-  '@acutenetwork/react@0.0.1(react@19.2.4)':
+  '@acutenetwork/react@file:vendor/acutenetwork-react-0.0.1.tgz(react@19.2.4)':
     dependencies:
-      '@acutenetwork/core': 0.0.1
+      '@acutenetwork/core': file:vendor/acutenetwork-core-0.0.1.tgz
       react: 19.2.4
 
   '@alloc/quick-lru@5.2.0': {}

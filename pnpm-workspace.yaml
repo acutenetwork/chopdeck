@@ -5,3 +5,10 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@acutenetwork/core@0.0.1'
   - '@acutenetwork/react@0.0.1'
+# The Acute SDK is not on a public registry yet, so its published tarballs are
+# vendored here (byte-identical to what `npm publish` produced, integrity
+# checked). `@acutenetwork/react` depends on `@acutenetwork/core`, which would
+# otherwise be looked up in a registry, so it is pointed at its tarball too.
+# Move both to plain semver versions once the SDK is published to npm.
+overrides:
+  '@acutenetwork/core': file:vendor/acutenetwork-core-0.0.1.tgz
