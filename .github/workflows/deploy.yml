@@ -35,9 +35,10 @@ jobs:
             exit 1
           fi
 
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 9
+      # No `version`: the action reads `packageManager` from package.json (pnpm 11).
+      # Pinning 9 here read the pnpm 11 settings in pnpm-workspace.yaml as a
+      # workspace with no packages and failed before installing anything.
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
